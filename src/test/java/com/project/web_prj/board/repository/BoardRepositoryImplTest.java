@@ -1,6 +1,7 @@
 package com.project.web_prj.board.repository;
 
 import com.project.web_prj.board.domain.Board;
+import com.project.web_prj.common.paging.Page;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +24,11 @@ class BoardRepositoryImplTest {
     BoardRepository repository;
 
     @Test
-    @DisplayName("300개의 게시물을 삽입해야 한다.")
+    @DisplayName("100개의 게시물을 삽입해야 한다.")
     void bulkInsert() {
 
         Board board;
-        for (int i = 1; i <= 300; i++) {
+        for (int i = 1; i <= 100; i++) {
             board = new Board();
             board.setTitle("제목" + i);
             board.setWriter("일이" + i);
@@ -98,6 +99,13 @@ class BoardRepositoryImplTest {
     void countTest() {
         int totalCount = repository.getTotalCount();
         assertTrue(totalCount == 300);
+    }
+
+    @Test
+    @DisplayName(" 원하는 페이지수와 게시물양에 따라 게시물 목록을 조회 해야 한다 ")
+    void pagingTest(){
+        Page page = new Page(2, 5);
+        repository.findAll(page).forEach(System.out::println);
     }
 
 }

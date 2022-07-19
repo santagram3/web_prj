@@ -2,6 +2,7 @@ package com.project.web_prj.board.controller;
 
 import com.project.web_prj.board.domain.Board;
 import com.project.web_prj.board.service.BoardService;
+import com.project.web_prj.common.paging.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -34,12 +35,12 @@ public class BoardController {
 
     // 게시물 목록 요청
     @GetMapping("/list")
-    public String list(Model model) {
-        log.info("controller request /board/list GET!");
-        System.out.println("\n=======================\n");
-        List<Board> boardList = boardService.findAllService();
-        log.debug("return data - {}", boardList);
-        System.out.println("\n=======================\n");
+    public String list(Page page ,Model model) {
+        log.info("controller request /board/list GET! -{}" , page);
+//        System.out.println("\n=======================\n");
+        List<Board> boardList = boardService.findAllService(page);
+//        log.debug("return data - {}", boardList);
+//        System.out.println("\n=======================\n");
         model.addAttribute("bList", boardList);
         return "board/board-list";
     }

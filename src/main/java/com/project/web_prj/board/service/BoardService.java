@@ -2,6 +2,7 @@ package com.project.web_prj.board.service;
 
 import com.project.web_prj.board.domain.Board;
 import com.project.web_prj.board.repository.BoardRepository;
+import com.project.web_prj.common.paging.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,18 @@ public class BoardService {
 
         return boardList;
     }
+
+    public List<Board> findAllService(Page page) {
+        log.info("findAll service start");
+        List<Board> boardList = repository.findAll(page);
+
+        // 목록 중간 데이터처리
+        processConverting(boardList);
+
+        return boardList;
+    }
+
+
 
     private void processConverting(List<Board> boardList) {
         for (Board b : boardList) {
