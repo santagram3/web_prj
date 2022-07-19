@@ -30,8 +30,8 @@ class BoardRepositoryImplTest {
         for (int i = 1; i <= 300; i++) {
             board = new Board();
             board.setTitle("제목" + i);
-            board.setWriter("길동이" + i);
-            board.setContent("안녕하세요요요요요요요~~" + i);
+            board.setWriter("일이" + i);
+            board.setContent("안녕하세요" + i);
             repository.save(board);
         }
     }
