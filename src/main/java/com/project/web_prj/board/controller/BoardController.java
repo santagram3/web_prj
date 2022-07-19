@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
@@ -42,9 +44,9 @@ public class BoardController {
 
     // 게시물 상세 조회 요청
     @GetMapping("/content/{boardNo}")
-    public String content(@PathVariable Long boardNo, Model model) {
+    public String content(@PathVariable Long boardNo, Model model, HttpServletResponse response, HttpServletRequest request) {
         log.info("controller request /board/content GET! - {}", boardNo);
-        Board board = boardService.findOneService(boardNo);
+        Board board = boardService.findOneService(boardNo, response, request);
         log.info("return data - {}", board);
         model.addAttribute("b", board);
         return "board/board-detail";
@@ -75,9 +77,9 @@ public class BoardController {
 
     // 수정 화면 요청
     @GetMapping("/modify")
-    public String modify(Long boardNo, Model model) {
+    public String modify(Long boardNo, Model model, HttpServletRequest request, HttpServletResponse response) {
         log.info("controller request /board/modify GET! - bno: {}", boardNo);
-        Board board = boardService.findOneService(boardNo);
+        Board board = boardService.findOneService(boardNo, response, request);
         log.info("find article: {}", board);
 
         model.addAttribute("board", board);

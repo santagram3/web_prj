@@ -5,7 +5,12 @@ import com.project.web_prj.board.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.WebUtils;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -62,9 +67,31 @@ public class BoardService {
     }
 
     // 게시물 상세 조회 요청 중간 처리
-    public Board findOneService(Long boardNo) {
+    @Transactional
+    public Board findOneService(Long boardNo, HttpServletResponse response, HttpServletRequest request) {
         log.info("findOne service start - {}", boardNo);
-        return repository.findOne(boardNo);
+        Board board = repository.findOne(boardNo);
+
+        // 해당 게시물 번호에 해당하는 쿠키가 있는지 확인
+        // 쿠키가 없으면 조회수를 상승시켜주고 쿠키를 만들어서 클라이언트에 전송
+        makeViewCount(boardNo, response, request);
+
+        return board;
+    }
+
+    private void makeViewCount(Long boardNo, HttpServletResponse response, HttpServletRequest request) {
+        // 쿠키를 조회 - 해당 이름의 쿠키가 있으면 쿠키가 들어오고 없으면 null이 들어옴
+        Cookie foundCookie = WebUtils.getCookie(request, "b" + boardNo);
+
+        if (foundCookie == null) {
+            repository.upViewCount(boardNo);
+
+            Cookie cookie = new Cookie("b" + boardNo, String.valueOf(boardNo));// 쿠키 생성
+            cookie.setMaxAge(60); // 쿠키 수명 설정
+            cookie.setPath("/board/content"); // 쿠키 작동 범위
+
+            response.addCookie(cookie); // 클라이언트에 쿠키 전송
+        }
     }
 
     // 게시물 삭제 요청 중간 처리
