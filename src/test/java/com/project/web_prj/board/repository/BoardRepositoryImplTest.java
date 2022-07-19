@@ -28,7 +28,7 @@ class BoardRepositoryImplTest {
     void bulkInsert() {
 
         Board board;
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= 125; i++) {
             board = new Board();
             board.setTitle("제목" + i);
             board.setWriter("일이" + i);
