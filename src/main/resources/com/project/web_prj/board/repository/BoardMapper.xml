@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.project.web_prj.board.repository.BoardRepository">
+<mapper namespace="com.project.web_prj.board.repository.BoardMapper">
 
     <resultMap id="boardMap" type="com.project.web_prj.board.domain.Board">
 
@@ -15,27 +15,27 @@
     <insert id="save">
         INSERT INTO tbl_board
         (board_no, writer, title, content)
-        VALUES (seq_tbl_board.nextval, #{writer}, #{title}, #{content})";
+        VALUES (seq_tbl_board.nextval, #{writer}, #{title}, #{content})
     </insert>
 
-<!--    <select id="findAll" resultMap="boardMap">-->
-<!--        SELECT * FROM tbl_board -->
-<!--       ORDER BY board_no DESC-->
-<!--    </select>-->
+    <!--    <select id="findAll" resultMap="boardMap">-->
+    <!--        SELECT * FROM tbl_board -->
+    <!--       ORDER BY board_no DESC-->
+    <!--    </select>-->
 
     <select id="findAll" resultMap="boardMap">
-        SELECT
+        SELECT *
         FROM (SELECT ROWNUM rn, v_board.*
-                FROM (
-                        SELECT *
-                      FROM tbl_board
-                      ORDER BY board_no DESC
-                       ) v_board)
-        WHERE rn BETWEEN (#{pageNum}-1)*#{amount}+1 AND (#{pageNum} * #{pageNum})
+        FROM (
+        SELECT *
+        FROM tbl_board
+        ORDER BY board_no DESC
+        ) v_board)
+        WHERE rn BETWEEN (#{pageNum}-1)*#{amount}+1 AND (#{pageNum} * #{amount})
     </select>
 
 
-    <select id="findOne">
+    <select id="findOne" resultMap="boardMap">
         SELECT * FROM tbl_board
         WHERE board_no=#{boardNo}
     </select>
@@ -51,8 +51,9 @@
     </insert>
 
 
-<!--    // 전체 게시물 수 조회-->
-    <select id="getTotalCount">
+    <!--    // 전체 게시물 수 조회-->
+    <!--     int 주의 할것 ! -->
+    <select id="getTotalCount" resultType="int">
         SELECT COUNT(*) AS cnt FROM tbl_board
     </select>
 
@@ -62,16 +63,28 @@
         WHERE board_no=#{boardNo}
     </update>
 
+<!--&lt;!&ndash;    검색하기 제목에 30이 들어간 쿼리&ndash;&gt;-->
+<!--    SELECT  *-->
+<!--    FROM (SELECT ROWNUM rn, v_board.*-->
+<!--    FROM (-->
+<!--    SELECT *-->
+<!--    FROM tbl_board-->
+<!--    WHERE title LIKE '%30%'-->
+<!--    ORDER BY board_no DESC-->
+<!--    ) v_board)-->
+<!--    WHERE rn BETWEEN 1 AND 10-->
 
-
-
-
-
-
-
-
-
-
+<!--    &lt;!&ndash;    검색하기 제목+내용 에 30 , 길동 이 들어간 쿼리&ndash;&gt;-->
+<!--    SELECT  *-->
+<!--    FROM (SELECT ROWNUM rn, v_board.*-->
+<!--    FROM (-->
+<!--    SELECT *-->
+<!--    FROM tbl_board-->
+<!--    WHERE title LIKE '%30%'-->
+<!--    or content LIKE '%길동%'-->
+<!--    ORDER BY board_no DESC-->
+<!--    ) v_board)-->
+<!--    WHERE rn BETWEEN 1 AND 10-->
 
 
 
