@@ -23,15 +23,36 @@
     <!--       ORDER BY board_no DESC-->
     <!--    </select>-->
 
+<!--    &lt;!&ndash;    verson1&ndash;&gt;-->
+<!--    <select id="findAll" resultMap="boardMap">-->
+<!--        SELECT *-->
+<!--        FROM (SELECT ROWNUM rn, v_board.*-->
+<!--                 FROM (-->
+<!--                          SELECT *-->
+<!--                          FROM tbl_board-->
+<!--                          ORDER BY board_no DESC-->
+<!--                      ) v_board)-->
+<!--        WHERE rn BETWEEN (#{pageNum}-1)*#{amount}+1 AND (#{pageNum} * #{amount})-->
+<!--    </select>-->
+
     <select id="findAll" resultMap="boardMap">
-        SELECT *
-        FROM (SELECT ROWNUM rn, v_board.*
+        SELECT  *
+        FROM (
+        SELECT ROWNUM rn, v_board.*
         FROM (
         SELECT *
         FROM tbl_board
+        <if test="type == 'title'">WHERE title LIKE '%' || #{keyword} || '%'</if>
+        <if test="type == 'writer'">WHERE writer LIKE '%' || #{keyword} || '%'</if>
+        <if test="type == 'content'">WHERE content LIKE '%' || #{keyword} || '%'</if>
+        <if test="type == 'tc'">
+            WHERE title LIKE '%' || #{keyword} || '%'
+            OR content LIKE '%' || #{keyword} || '%'
+        </if>
         ORDER BY board_no DESC
-        ) v_board)
-        WHERE rn BETWEEN (#{pageNum}-1)*#{amount}+1 AND (#{pageNum} * #{amount})
+        ) v_board
+        )
+        WHERE rn BETWEEN (#{pageNum} - 1) * #{amount} + 1 AND (#{pageNum} * #{amount})
     </select>
 
 
@@ -63,29 +84,28 @@
         WHERE board_no=#{boardNo}
     </update>
 
-<!--&lt;!&ndash;    검색하기 제목에 30이 들어간 쿼리&ndash;&gt;-->
-<!--    SELECT  *-->
-<!--    FROM (SELECT ROWNUM rn, v_board.*-->
-<!--    FROM (-->
-<!--    SELECT *-->
-<!--    FROM tbl_board-->
-<!--    WHERE title LIKE '%30%'-->
-<!--    ORDER BY board_no DESC-->
-<!--    ) v_board)-->
-<!--    WHERE rn BETWEEN 1 AND 10-->
+    <!--&lt;!&ndash;    검색하기 제목에 30이 들어간 쿼리&ndash;&gt;-->
+    <!--    SELECT  *-->
+    <!--    FROM (SELECT ROWNUM rn, v_board.*-->
+    <!--    FROM (-->
+    <!--    SELECT *-->
+    <!--    FROM tbl_board-->
+    <!--    WHERE title LIKE '%30%'-->
+    <!--    ORDER BY board_no DESC-->
+    <!--    ) v_board)-->
+    <!--    WHERE rn BETWEEN 1 AND 10-->
 
-<!--    &lt;!&ndash;    검색하기 제목+내용 에 30 , 길동 이 들어간 쿼리&ndash;&gt;-->
-<!--    SELECT  *-->
-<!--    FROM (SELECT ROWNUM rn, v_board.*-->
-<!--    FROM (-->
-<!--    SELECT *-->
-<!--    FROM tbl_board-->
-<!--    WHERE title LIKE '%30%'-->
-<!--    or content LIKE '%길동%'-->
-<!--    ORDER BY board_no DESC-->
-<!--    ) v_board)-->
-<!--    WHERE rn BETWEEN 1 AND 10-->
-
+    <!--    &lt;!&ndash;    검색하기 제목+내용 에 30 , 길동 이 들어간 쿼리&ndash;&gt;-->
+    <!--    SELECT  *-->
+    <!--    FROM (SELECT ROWNUM rn, v_board.*-->
+    <!--    FROM (-->
+    <!--    SELECT *-->
+    <!--    FROM tbl_board-->
+    <!--    WHERE title LIKE '%30%'-->
+    <!--    or content LIKE '%길동%'-->
+    <!--    ORDER BY board_no DESC-->
+    <!--    ) v_board)-->
+    <!--    WHERE rn BETWEEN 1 AND 10-->
 
 
 </mapper>

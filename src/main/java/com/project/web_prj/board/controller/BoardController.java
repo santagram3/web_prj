@@ -4,6 +4,7 @@ import com.project.web_prj.board.domain.Board;
 import com.project.web_prj.board.service.BoardService;
 import com.project.web_prj.common.paging.Page;
 import com.project.web_prj.common.paging.PageMaker;
+import com.project.web_prj.common.search.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Controller;
@@ -35,13 +36,27 @@ public class BoardController {
 
     private final BoardService boardService;
 
+//    // 게시물 목록 요청
+//    @GetMapping("/list")
+//    public String list(Page page ,Model model) {
+//        log.info("controller request /board/list GET! -{}" , page);
+//
+//        Map<String , Object> boardMap = boardService.findAllService(page);
+//        PageMaker pm = new PageMaker(page, (Integer) boardMap.get("tc"));
+//
+//        model.addAttribute("bList", boardMap.get("bList"));
+//        model.addAttribute("pm",pm);
+//        return "board/board-list";
+//    }
+
+
     // 게시물 목록 요청
     @GetMapping("/list")
-    public String list(Page page ,Model model) {
-        log.info("controller request /board/list GET! -{}" , page);
+    public String list(Search search, Model model) {
+        log.info("controller request /board/list GET! -{}" , search);
 
-        Map<String , Object> boardMap = boardService.findAllService(page);
-        PageMaker pm = new PageMaker(page, (Integer) boardMap.get("tc"));
+        Map<String , Object> boardMap = boardService.findAllService(search);
+        PageMaker pm = new PageMaker(new Page(search.getPageNum(),search.getAmount()), (Integer) boardMap.get("tc"));
 
         model.addAttribute("bList", boardMap.get("bList"));
         model.addAttribute("pm",pm);

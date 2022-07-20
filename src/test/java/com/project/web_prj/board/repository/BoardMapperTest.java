@@ -2,6 +2,7 @@ package com.project.web_prj.board.repository;
 
 import com.project.web_prj.board.domain.Board;
 import com.project.web_prj.common.paging.Page;
+import com.project.web_prj.common.search.Search;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ class BoardMapperTest {
     @Test
     @DisplayName("저장 잘 되는지 잘 보자고 ")
     void saveTest() {
-        for (int i = 0; i <10 ; i++) {
+        for (int i = 11; i <152 ; i++) {
         Board board = new Board();
             board.setWriter("삼삼이"+i);
             board.setTitle("인생사"+i);
@@ -34,7 +35,7 @@ class BoardMapperTest {
     @Test
     @DisplayName("모두 불러 모으기 ~ ")
     void findAllTest() {
-        List<Board> all = mapper.findAll(new Page(3, 3));
+        List<Board> all = mapper.findAll(new Search("title","1"));
         for (Board b : all) {
             System.out.println(b);
 
@@ -67,4 +68,28 @@ class BoardMapperTest {
     @Test
     void upViewCount() {
     }
+
+//    @Test
+//    @DisplayName("제목으로 검색된 목록을 조회 해야 한다 ")
+//    void searchByTitleTest(){
+//
+//        Search search = new Search(new Page(1, 10), null, "2");
+//
+//        mapper.findAll2(search).forEach(System.out::println);
+//
+//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
