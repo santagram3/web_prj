@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository("bri")
 @Log4j2
-@RequiredArgsConstructor
+@RequiredArgsConstructor // final 생성자 만들어주기
 public class BoardRepositoryImpl implements BoardRepository {
 
     private final JdbcTemplate template;
@@ -32,13 +32,15 @@ public class BoardRepositoryImpl implements BoardRepository {
     @Override
     public List<Board> findAll() {
         String sql = "SELECT  *\n" +
-                "FROM (SELECT ROWNUM rn, v_board.*\n" +
+                "FROM (SELECT ROWNUM rn, v_board.*\n" + // 정렬한거 앞에 숫자(일련번호)를 붙임
                 "        FROM (\n" +
                 "                SELECT *\n" +
                 "                FROM tbl_board\n" +
                 "                ORDER BY board_no DESC\n" +
-                "                ) v_board)\n" +
-                "WHERE rn BETWEEN 1 AND 10";
+                "                ) v_board)\n" + // 최신순으로 정렬
+                "WHERE rn BETWEEN 1 AND 10";// rn 으로 치환하는 이유
+
+
         return template.query(sql, (rs, rn) -> new Board(rs));
     }
 
@@ -81,7 +83,7 @@ public class BoardRepositoryImpl implements BoardRepository {
 //                "ORDER BY board_no DESC";
 //        return template.query(sql, (rs, rn) -> new Board(rs));
 //    }
-
+//
 
     @Override
     public Board findOne(Long boardNo) {

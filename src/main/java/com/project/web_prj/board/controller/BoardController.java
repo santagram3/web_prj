@@ -50,11 +50,14 @@ public class BoardController {
 
     // 게시물 상세 조회 요청
     @GetMapping("/content/{boardNo}")
-    public String content(@PathVariable Long boardNo, Model model, HttpServletResponse response, HttpServletRequest request) {
+    public String content(@PathVariable Long boardNo, Model model, HttpServletResponse response, HttpServletRequest request , @ModelAttribute("p") Page page) {
+        System.out.println("\n\n========================\n\n");
         log.info("controller request /board/content GET! - {}", boardNo);
-        Board board = boardService.findOneService(boardNo, response, request);
+        Board board = boardService.findOneService(boardNo, response, request );
         log.info("return data - {}", board);
         model.addAttribute("b", board);
+//        model.addAttribute("p",page);
+        System.out.println("\n\n========================\n\n");
         return "board/board-detail";
     }
 
@@ -80,8 +83,9 @@ public class BoardController {
 
     // 게시물 삭제 요청
     @GetMapping("/delete")
-    public String delete(Long boardNo) {
+    public String delete(Long boardNo ) {
         log.info("controller request /board/delete GET! - bno: {}", boardNo);
+
         return boardService.removeService(boardNo)
                 ? "redirect:/board/list" : "redirect:/";
     }
