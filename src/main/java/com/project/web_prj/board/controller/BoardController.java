@@ -1,12 +1,14 @@
 package com.project.web_prj.board.controller;
 
 import com.project.web_prj.board.domain.Board;
+import com.project.web_prj.board.repository.BoardMapper;
 import com.project.web_prj.board.service.BoardService;
 import com.project.web_prj.common.paging.Page;
 import com.project.web_prj.common.paging.PageMaker;
 import com.project.web_prj.common.search.Search;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -36,23 +38,11 @@ public class BoardController {
 
     private final BoardService boardService;
 
-//    // 게시물 목록 요청
-//    @GetMapping("/list")
-//    public String list(Page page ,Model model) {
-//        log.info("controller request /board/list GET! -{}" , page);
-//
-//        Map<String , Object> boardMap = boardService.findAllService(page);
-//        PageMaker pm = new PageMaker(page, (Integer) boardMap.get("tc"));
-//
-//        model.addAttribute("bList", boardMap.get("bList"));
-//        model.addAttribute("pm",pm);
-//        return "board/board-list";
-//    }
 
 
     // 게시물 목록 요청
     @GetMapping("/list")
-    public String list(Search search, Model model) {
+    public String list(@ModelAttribute("s") Search search, Model model) {
         log.info("controller request /board/list GET! -{}" , search);
 
         Map<String , Object> boardMap = boardService.findAllService(search);
@@ -61,11 +51,14 @@ public class BoardController {
         model.addAttribute("bList", boardMap.get("bList"));
         model.addAttribute("pm",pm);
         return "board/board-list";
+
     }
+
 
     // 게시물 상세 조회 요청
     @GetMapping("/content/{boardNo}")
-    public String content(@PathVariable Long boardNo, Model model, HttpServletResponse response, HttpServletRequest request , @ModelAttribute("p") Page page) {
+    public String content(@PathVariable Long boardNo, Model model,
+                          HttpServletResponse response, HttpServletRequest request , @ModelAttribute("p") Page page) {
         System.out.println("\n\n========================\n\n");
         log.info("controller request /board/content GET! - {}", boardNo);
         Board board = boardService.findOneService(boardNo, response, request );
@@ -75,6 +68,7 @@ public class BoardController {
         System.out.println("\n\n========================\n\n");
         return "board/board-detail";
     }
+
 
     // 게시물 쓰기 화면 요청
     @GetMapping("/write")

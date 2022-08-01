@@ -72,10 +72,27 @@
     </insert>
 
 
+<!--    &lt;!&ndash;    // 전체 게시물 수 조회&ndash;&gt;-->
+<!--    &lt;!&ndash;     int 주의 할것 ! &ndash;&gt;-->
+<!--    <select id="getTotalCount" resultType="int">-->
+<!--        SELECT COUNT(*) AS cnt-->
+<!--        FROM tbl_board-->
+<!--        -->
+<!--    </select>-->
+
     <!--    // 전체 게시물 수 조회-->
     <!--     int 주의 할것 ! -->
     <select id="getTotalCount" resultType="int">
-        SELECT COUNT(*) AS cnt FROM tbl_board
+        SELECT COUNT(*) AS cnt
+        FROM tbl_board
+        <if test="type == 'title'">WHERE title LIKE '%' || #{keyword} || '%'</if>
+        <if test="type == 'writer'">WHERE writer LIKE '%' || #{keyword} || '%'</if>
+        <if test="type == 'content'">WHERE content LIKE '%' || #{keyword} || '%'</if>
+        <if test="type == 'tc'">
+            WHERE title LIKE '%' || #{keyword} || '%'
+            OR content LIKE '%' || #{keyword} || '%'
+        </if>
+
     </select>
 
     <update id="upViewCount">

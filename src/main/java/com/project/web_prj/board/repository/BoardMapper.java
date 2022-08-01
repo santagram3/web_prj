@@ -2,7 +2,6 @@ package com.project.web_prj.board.repository;
 
 
 import com.project.web_prj.board.domain.Board;
-import com.project.web_prj.common.paging.Page;
 import com.project.web_prj.common.search.Search;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -31,8 +30,12 @@ public interface BoardMapper {
     // 게시글 수정
     boolean modify(Board board);
 
+//    // 전체 게시물 수 조회
+//    int getTotalCount();
+
+    // 바꾼후
     // 전체 게시물 수 조회
-    int getTotalCount();
+    int getTotalCount(Search search);
 
     // 조회수 상승 처리
     void upViewCount(Long boardNo);

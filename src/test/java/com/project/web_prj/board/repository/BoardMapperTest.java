@@ -19,9 +19,9 @@ class BoardMapperTest {
     BoardMapper mapper;
 
     @Test
-    @DisplayName("저장 잘 되는지 잘 보자고 ")
+    @DisplayName("저장 잘 되는지 잘 보자고 // ")
     void saveTest() {
-        for (int i = 11; i <152 ; i++) {
+        for (int i = 1; i <320 ; i++) {
         Board board = new Board();
             board.setWriter("삼삼이"+i);
             board.setTitle("인생사"+i);

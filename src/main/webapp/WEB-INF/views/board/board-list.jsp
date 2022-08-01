@@ -30,15 +30,39 @@
             width: 8%;
             margin-right: 10px;
         }
+
         .board-list .amount li a {
             width: 100%;
         }
 
 
 
+
         header {
             background: #222;
             border-bottom: 1px solid #2c2c2c;
+        }
+
+        /* 검색창 */
+        .board-list .top-section {
+            display: flex;
+            justify-content: space-between;
+        }
+        .board-list .top-section .search {
+            flex: 4;
+        }
+        .board-list .top-section .amount {
+            flex: 4;
+        }
+        .board-list .top-section .search form {
+            display: flex;
+        }
+        .board-list .top-section .search form #search-type {
+            flex: 1;
+            margin-right: 10px;
+        }
+        .board-list .top-section .search form input[name=keyword] {
+            flex: 3;
         }
 
 
@@ -79,11 +103,43 @@
 
         <div class="board-list">
 
-            <ul class="amount">
-                <li><a class="btn btn-danger" href="/board/list?amount=10">10</a></li>
-                <li><a class="btn btn-danger" href="/board/list?amount=20">20</a></li>
-                <li><a class="btn btn-danger" href="/board/list?amount=30">30</a></li>
-            </ul>
+            <div class="top-section">
+
+                <div class="search">
+
+                    <!--  검색창 영역  -->
+                    <form action="/board/list" method="get" >
+                        
+                        <select class="form-select" name="type" id="search-type">
+                            <!-- name =  -->
+                            <option value="title">제목</option>
+                            <option value="content">내용</option>
+                            <option value="writer">작성자</option>
+                            <option value="tc">제목 + 내용</option>
+                        </select>
+
+                        <input type="text" class="form-control" name="keyword" value="${s.keyword}">
+                        <!-- value="${s.keyword} 는 컨트롤러 @ModelAttribute("s") Search search  이거랑 매칭 -->
+                        <!-- type = 텍스트 형태로 넣을 것이다  -->
+                        <!--  name = 키워드 인 이유  ? == 서치클래스에서 이름이 키워드라  -->
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        
+                    </form>
+                </div>
+
+
+
+
+                <!-- 목록 개수별 보기  -->
+
+                <ul class="amount">
+                    <li><a class="btn btn-danger" href="/board/list?amount=10">10</a></li>
+                    <li><a class="btn btn-danger" href="/board/list?amount=20">20</a></li>
+                    <li><a class="btn btn-danger" href="/board/list?amount=30">30</a></li>
+                </ul>
+            </div>
 
             <table class="table table-dark table-striped table-hover articles">
                 <tr>
@@ -98,7 +154,12 @@
                     <tr>
                         <td>${b.boardNo}</td>
                         <td>${b.writer}</td>
-                        <td title="${b.title}">${b.shortTitle}</td>
+                        <td title="${b.title}">
+                            ${b.shortTitle}[${b.replyCount}]
+                            <c:if test="${b.newArticle}">
+                                <span class=" badge rounded-pill bg-danger"></span>
+                            </c:if>
+                        </td>
                         <td>${b.viewCnt}</td>
                         <td>${b.prettierDate}</td>
                     </tr>
@@ -114,18 +175,19 @@
 
                         <c:if test="${pm.prev}">
                             <li class="page-item"><a class="page-link"
-                                    href="/board/list?pageNum=${pm.beginPage - 1}&amount=${pm.page.amount}">prev</a></li>
+                                    href="/board/list?pageNum=${pm.beginPage - 1}&amount=${pm.page.amount}&type=${s.type}&keyword=${s.keyword}">prev</a>
+                            </li>
                         </c:if>
 
                         <c:forEach var="n" begin="${pm.beginPage}" end="${pm.endPage}" step="1">
                             <li data-page-num="${n}" class="page-item">
-                                <a class="page-link" href="/board/list?pageNum=${n}&amount=${pm.page.amount}">${n}</a>
+                                <a class="page-link" href="/board/list?pageNum=${n}&amount=${pm.page.amount}&type=${s.type}&keyword=${s.keyword}">${n}</a>
                             </li>
                         </c:forEach>
 
                         <c:if test="${pm.next}">
                             <li class="page-item"><a class="page-link"
-                                    href="/board/list?pageNum=${pm.endPage + 1}&amount=${pm.page.amount}">next</a></li>
+                                    href="/board/list?pageNum=${pm.endPage + 1}&amount=${pm.page.amount}&type=${s.type}&keyword=${s.keyword}">next</a></li>
                         </c:if>
 
                     </ul>
@@ -193,15 +255,29 @@
 
         }
 
+          // 옵션태그 고정
+          function fixSearchOption() {
+            const $select = document.getElementById('search-type');
+
+            for (let $opt of [...$select.children]) {
+                if ($opt.value === '${s.type}') {
+                    $opt.setAttribute('selected', 'selected');
+                    break;
+                }
+            }
+        }
+
+
+
 
         (function () {
 
             alertServerMessage();
             detailEvent();
             appendPageActive();
+            fixSearchOption();
 
         })();
-
     </script>
 
 </body>
