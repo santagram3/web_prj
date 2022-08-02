@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
 @Log4j2
 public class UploadController {
 
-
+//    http://localhost:8183/upload-form
 
     // 업로드 파일 저장 경로
     private static final String UPLOAD_PATH = "C:\\code\\upload";
@@ -76,7 +77,7 @@ public class UploadController {
     // 비동기 전용 파일 업로드 처리
     @PostMapping("/ajax-upload")
     @ResponseBody
-    public List<String> ajaxUpload(List<MultipartFile> files) {
+    public ResponseEntity<List<String>> ajaxUpload(List<MultipartFile> files) {
 
         log.info("/ajax-upload post {}", files.get(0).getOriginalFilename());
 
@@ -89,7 +90,7 @@ public class UploadController {
             String fullPath = FileUtils.uploadFile(file, UPLOAD_PATH);
             fileNames.add(fullPath);
         }
-        return fileNames;
+        return new ResponseEntity<>(fileNames, HttpStatus.OK);
     }
 
     // 파일 데이터 로드 요청 처리
@@ -117,6 +118,7 @@ public class UploadController {
 
         //2. 해당 파일을 InputStream을 통해 불러온다
         try (FileInputStream fis = new FileInputStream(f)){
+            // 인풋 , 컴퓨터에서 가져오는것 !
             // 인풋스트림 , 아웃풋 스트림
 
             //3. 클라이엉ㄴ트에게 순수 이미지를 응답해야 하므로 MINE TYPE을 응답헤더에 설정
@@ -125,10 +127,27 @@ public class UploadController {
             String ext = FileUtils.getFileExtension(fileName);
             MediaType mediaType = FileUtils.getMediaType(ext);
 
-            HttpHeaders headers = new HttpHeaders();
+            HttpHeaders headers = new HttpHeaders(); //헤더를 만들었음
 
             if(mediaType !=null){// 이미지라면 ?
                 headers.setContentType(mediaType);
+                // 헤더에 타입을 세팅함
+            } else { // 다운로드 가능하게 설정 // 파일설정 !
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);//
+
+                // 파일명 원래대로 돌려놓기
+                fileName = fileName.substring(fileName.lastIndexOf("_")+1);
+
+                // 파일명이 한글인 경우 인코딩 재설정
+                String encoding = new String(
+                        fileName.getBytes("UTF-8"), "ISO-8859-1");
+
+                // 헤더에 위 내용들 추가
+                headers.add("Content-Disposition"
+                        , "attachment; fileName=\"" + encoding + "\"");
+
+
+
             }
             // 4. 파일 순수 데이터 바이트 배열에 저장.
 //            //파일업로드 라이브러리

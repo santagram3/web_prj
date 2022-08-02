@@ -9,9 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WebPrjApplication {
 
 	public static void main(String[] args) {
-		log.info("\n\n============================\n\n\n");
+
 		SpringApplication.run(WebPrjApplication.class, args);
-		log.info("\n\n============================\n\n\n");
+
 	}
 
 }

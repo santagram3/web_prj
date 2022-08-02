@@ -1,39 +1,41 @@
-
 <%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title></title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
 
-<!-- jquery -->
-<script src="/js/jquery-3.3.1.min.js"></script>
+    <!-- jquery -->
+    <script src="/js/jquery-3.3.1.min.js"></script>
 
-<style>
+    <style>
+        .fileDrop {
+            width: 800px;
+            height: 400px;
+            border: 1px dashed gray;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+        }
 
-    .fileDrop {
-        width: 800px;
-        height: 400px;
-        border: 1px dashed gray;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 1.5em;
-    }
-    .uploaded-list {
-        display: flex;
-    }
-    .img-sizing {
-        display: block;
-        width: 100px;
-        height: 100px;
-    }
-</style>
+        .uploaded-list {
+            display: flex;
+        }
+
+        .img-sizing {
+            display: block;
+            width: 100px;
+            height: 100px;
+        }
+    </style>
 
 </head>
+
 <body>
 
     <!-- 파일 업로드를 위한 form - 동기 처리 -->
@@ -58,19 +60,18 @@
 
     <!-- 업로드된 이미지의 썸네일을 보여주는 영역 -->
     <div class="uploaded-list">
-        
+
     </div>
 
 
     <script>
-
         // start JQuery 
         $(document).ready(function () {
 
             function isImageFile(originFileName) {
                 //정규표현식
                 const pattern = /jpg$|gif$|png$/i;
-                  // $ .. 로 끝나는것 뜻 i 는 대소문자 구분 안하겠다. 
+                // $ .. 로 끝나는것 뜻 i 는 대소문자 구분 안하겠다. 
                 return originFileName.match(pattern);
             }
 
@@ -87,11 +88,31 @@
                     $img.classList.add('img-sizing');
                     // $img.setAttribute('src', fileName); 이렇게 하니까 보안상 이슈가 생김 그래서 
 
-                    $img.setAttribute('src', 'loadFile?fileName='+fileName);
+                    $img.setAttribute('src', 'loadFile?fileName=' + fileName);
                     $img.setAttribute('alt', originFileName); // 시각 장애인에 대한 배려 
+                    // 이미지가 안나올시 , 또는 이미지를 볼수없는 사람이 읽을수 있도록 사진에 코멘트를 달아준다 ! 
+
+                    // <img src = "이미지 경로" alt="이미지에 대한 설명 (코멘트)">
+
                     $('.uploaded-list').append($img);
                 }
+                // 이미지가 아니라면 다운로드 링크를 생성
+                else {
 
+                    const $a = document.createElement('a');
+                    $a.setAttribute('href', '/loadFile?fileName=' + fileName);
+
+                    const $img = document.createElement('img');
+                    $img.classList.add('img-sizing');
+                    $img.setAttribute('src', '/img/file_icon.jpg');
+                    $img.setAttribute('alt', originFileName);
+
+                    $a.append($img);
+                    $a.innerHTML += '<span>' + originFileName + '</span';
+
+                    $('.uploaded-list').append($a);
+
+                }
 
             }
 
@@ -113,7 +134,7 @@
 
             // drag 진입 이벤트
             $dropBox.on('dragover dragenter', e => {
-                e.preventDefault(); 
+                e.preventDefault();
                 $dropBox
                     .css('border-color', 'red')
                     .css('background', 'lightgray');
@@ -121,7 +142,7 @@
 
             // drag 탈출 이벤트
             $dropBox.on('dragleave', e => {
-                e.preventDefault(); 
+                e.preventDefault();
                 $dropBox
                     .css('border-color', 'gray')
                     .css('background', 'transparent');
@@ -173,9 +194,9 @@
 
         });
         // end jQuery
-
     </script>
 
 
 </body>
+
 </html>

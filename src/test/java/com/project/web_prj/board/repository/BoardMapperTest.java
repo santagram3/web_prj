@@ -69,17 +69,23 @@ class BoardMapperTest {
     void upViewCount() {
     }
 
-//    @Test
-//    @DisplayName("제목으로 검색된 목록을 조회 해야 한다 ")
-//    void searchByTitleTest(){
-//
-//        Search search = new Search(new Page(1, 10), null, "2");
-//
-//        mapper.findAll2(search).forEach(System.out::println);
-//
-//    }
 
 
+
+    @Test
+    @DisplayName("특정 게시물에 첨부된 파일경로들을 조회한다.")
+    void findFileNamesTest() {
+        //given
+        Long bno = 323L;
+
+        //when
+        List<String> fileNames = mapper.findFileNames(bno);
+
+        //then
+        fileNames.forEach(System.out::println);
+        assertEquals(2, fileNames.size());
+
+    }
 
 
 

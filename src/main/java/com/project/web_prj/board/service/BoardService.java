@@ -30,15 +30,23 @@ public class BoardService {
     private final ReplyMapper replyMapper;
 //    private final BoardRepository repository;
 
-//    // 게시물 등록 요청 중간 처리
+    //    // 게시물 등록 요청 중간 처리
 //    public boolean saveService(Board board) {
 //        log.info("save service start - {}", board);
 //        return repository.save(board);
 //    }
     // 게시물 등록 요청 중간 처리
+    @Transactional // 의미를 잘 모르겟다
     public boolean saveService(Board board) {
         log.info("save service start - {}", board);
-        return boardMapper.save(board);
+        boolean flag = boardMapper.save(board);
+        List<String> fileNames = board.getFileNames();
+        if (fileNames != null && fileNames.size() > 0) {
+            for (String fileName : fileNames) {
+                boardMapper.addFile(fileName);
+            }
+        }
+        return flag;
     }
 
 //    // 게시물 전체 조회 요청 중간 처리
@@ -171,7 +179,7 @@ public class BoardService {
         }
     }
 
-//    // 게시물 상세 조회 요청 중간 처리
+    //    // 게시물 상세 조회 요청 중간 처리
 //    @Transactional
 //    public Board findOneService(Long boardNo, HttpServletResponse response, HttpServletRequest request) {
 //        log.info("findOne service start - {}", boardNo);
@@ -267,12 +275,10 @@ public class BoardService {
         return boardMapper.modify(board);
     }
 
-
-
-
-
-
-
+    // 첨부파일 목록 가져오는 중간처리
+    public List<String> getFilesService(long bno){
+        return boardMapper.findFileNames(bno);
+    }
 
 
 }

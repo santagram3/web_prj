@@ -101,6 +101,22 @@
         WHERE board_no=#{boardNo}
     </update>
 
+    <!--첨부파일 추가   -->
+    <insert id="addFile">
+        INSERT INTO file_upload
+        (file_name ,bno)
+        VALUES
+        (#{fileName} , seq_tbl_board.currval)
+    </insert>
+
+    <select id="findFileNames" resultType="string">
+        select file_name
+        from file_upload
+        where bno=#{bno}
+    </select>
+
+
+
     <!--&lt;!&ndash;    검색하기 제목에 30이 들어간 쿼리&ndash;&gt;-->
     <!--    SELECT  *-->
     <!--    FROM (SELECT ROWNUM rn, v_board.*-->
