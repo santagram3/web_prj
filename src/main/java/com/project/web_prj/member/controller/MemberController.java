@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,6 +55,7 @@ public class MemberController {
     // 로그인 화면을 열어주는 요청 처리 !
     @GetMapping("/sign-in")
     public void signIn(HttpServletRequest request) {
+        log.info("로그인 화면 켜짐");
 
         // 요청 정보 헤더 안에는 Referer 라는 키가 있는데
         // 여기안에는 이 페이지로 진입 할때 어디에서 왔는지 URI 정보가 들어있음
@@ -67,21 +69,21 @@ public class MemberController {
 
     // 로그인 요청
     @PostMapping("sign-in")
-    public String signIn(LoginDTO inputData, RedirectAttributes ra, HttpSession session) {
+    public String signIn(LoginDTO inputData, Model model, HttpSession session) {
         // member 로 받지 않고 , LoginDTO 로 받는 이유
         // 다 매칭될수있도록 만들어야 된다 !! // 로그보고 확인한다 !!
 //        HttpSession session// 세선정보 객체
-        log.info("/member/signin Post {}", inputData);
-//        log.info("sesstion timeOut {}" ,session.getMaxInactiveInterval());
+        log.info("/member/sign-in Post {}", inputData);
+//        log.info("session timeOut {}" ,session.getMaxInactiveInterval());
 
         LoginFlag flag = memberService.logIn(inputData, session);
         if (flag == LoginFlag.SUCCESS) {
             log.info("Login Success");
             String redirectURI = (String) session.getAttribute("redirectURI");
-            return "redirect:/"+ redirectURI;
+            return "redirect:"+ redirectURI;
         }
-        ra.addFlashAttribute("loginMsg", flag);
-        return "redirect:/member/sign-in";
+        model.addAttribute("loginMsg", flag);
+        return "member/sign-in";
     }
 
 

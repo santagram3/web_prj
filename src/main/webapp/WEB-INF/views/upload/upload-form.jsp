@@ -155,6 +155,7 @@
                 $dropBox
                     .css('border-color', 'gray')
                     .css('background', 'transparent');
+                    //transparent 투명색 
             });
 
             // drop 이벤트
