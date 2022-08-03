@@ -80,15 +80,23 @@
 
                 //원본 파일 명 추출
                 let originFileName = fileName.substring(fileName.indexOf("_") + 1);
+                // fileName이라는 문자열에서 indexOf 처음부터 _를 기준으로 그 뒤를 짜른다 ! 
+                // 2022/08/01/qfwqfj[oqwjf_상어.jpg에서 
+                // 상어.jpg 이걸 추출한다 
 
                 //확장자 추출후 이미지인지까지 확인
                 if (isImageFile(originFileName)) { // 파일이 이미지라면
+                    // isImageFile 이것도 메서드 
 
                     const $img = document.createElement('img');
-                    $img.classList.add('img-sizing');
+                    // 이미지 태그 생성 
+                    $img.classList.add('img-sizing'); // css 를 쓰기 위해서 ! 만듬
+                    // class="img-sizing"
                     // $img.setAttribute('src', fileName); 이렇게 하니까 보안상 이슈가 생김 그래서 
 
-                    $img.setAttribute('src', 'loadFile?fileName=' + fileName);
+                    $img.setAttribute('src', '/loadFile?fileName=' + fileName);
+                    // 경로 
+
                     $img.setAttribute('alt', originFileName); // 시각 장애인에 대한 배려 
                     // 이미지가 안나올시 , 또는 이미지를 볼수없는 사람이 읽을수 있도록 사진에 코멘트를 달아준다 ! 
 
@@ -119,6 +127,7 @@
 
             // 드롭한 파일을 화면에 보여주는 함수
             function showFileData(fileNames) {
+                // 2022/08/01/qfwqfj[oqwjf_상어.jpg 같은애들 묶음 
 
                 // 이미지인지? 이미지가 아닌지에 따라 구분하여 처리
                 // 이미지면 썸네일을 렌더링하고 아니면 다운로드 링크를 렌더링한다.
@@ -151,28 +160,42 @@
             // drop 이벤트
             $dropBox.on('drop', e => {
                 e.preventDefault();
-                // console.log('드롭 이벤트 작동!');
+                console.log('드롭 이벤트 작동!');
+                console.log("===========================");
 
                 // 드롭된 파일 정보를 서버로 전송
 
                 // 1. 드롭된 파일 데이터 읽기
-                // console.log(e);
-                const files = e.originalEvent.dataTransfer.files;
-                // console.log('drop file data: ', files);
+                console.log(e);
+                console.log("===========================");
 
+                const files = e.originalEvent.dataTransfer.files;
+
+                console.log('drop file data: ', files);
+                console.log("===========================");
                 // 2. 읽은 파일 데이터를 input[type=file]태그에 저장
                 const $fileInput = $('#ajax-file');
+                // 밖에서는 안보이는 인풋창을 잡아와서 
                 $fileInput.prop('files', files);
+                // 인풋창에  files 놈을 'files' 라는 이름으로 저장한다 
 
-                // console.log($fileInput);
+                console.log("this is fileInput");
+                console.log($fileInput);
+                console.log("===========================");
 
                 // 3. 파일 데이터를 비동기 전송하기 위해서는 FormData객체가 필요
-                const formData = new FormData();
+                const formData = new FormData(); 
+                // 파일 데이터를 담기위한 배열이나 리스트로 생각하면됨! 
 
                 // 4. 전송할 파일들을 전부 FormData안에 포장
                 for (let file of $fileInput[0].files) {
+                    // 인풋창 안에는 여러가지 프로퍼티가 있는데 그중에 0번째공간에 파일들이 담겨져 있다 . 
+                    // 그래서 그안에서 파일이 담겨져 있는 0번째 있는것들을 formData 리스트,객체.에 넣어준다 
                     formData.append('files', file);
+                    // formData라는곳에 
                 }
+                console.log('this is formData');
+                console.log(formData);
 
                 // 5. 비동기 요청 전송
                 const reqInfo = {
@@ -183,8 +206,13 @@
                     .then(res => {
                         //console.log(res.status);
                         return res.json();
+                        // 여기까지가 파일 업로드이다 ! 저장까지의 과정 ! 
                     })
                     .then(fileNames => {
+                        // 2022/08/01/qfwqfj[oqwjf_상어.jpg 이런거 묶음 
+
+                        // 위에서 저장을 했고 , 저장되어있는 자리(경로)를 반환받았다 
+                        // 여기서부터는 썸네일 보여주는 작업 
                         console.log(fileNames);
 
                         showFileData(fileNames);

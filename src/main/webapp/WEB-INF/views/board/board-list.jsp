@@ -36,8 +36,6 @@
         }
 
 
-
-
         header {
             background: #222;
             border-bottom: 1px solid #2c2c2c;

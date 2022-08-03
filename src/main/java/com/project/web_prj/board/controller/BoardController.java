@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -75,7 +76,11 @@ public class BoardController {
 
     // 게시물 쓰기 화면 요청
     @GetMapping("/write")
-    public String write() {
+    public String write(HttpSession session ,RedirectAttributes ra) {
+        if (session.getAttribute("loginUser")==null){
+            ra.addFlashAttribute("warningMsg","forbidden");
+            return "redirect:/member/sign-in";
+        }
         log.info("controller request /board/write GET!");
         return "board/board-write";
     }
@@ -144,6 +149,25 @@ public class BoardController {
         return new ResponseEntity<>(files, HttpStatus.OK);
     }
 
+
+//    //서버에 있는 파일 삭제 요청처리
+//    //URI: /deleteFile?fileName=/2019/09/22/s_djfksldfjs_abc.jpg
+//    @DeleteMapping("/deleteFile")
+//    public ResponseEntity<String> deleteFile(String fileName) throws Exception {
+//
+//        try {
+//            //파일 삭제
+//            File delFile = new File(UPLOAD_PATH + fileName);
+//            if (!delFile.exists()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//
+//            delFile.delete();
+//
+//            return new ResponseEntity<>("file-de-lsuccess", HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//
+//    }
 
 
 

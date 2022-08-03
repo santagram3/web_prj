@@ -47,7 +47,10 @@
                 <div class="mb-3">
                     <label for="writer-input" class="form-label">작성자</label>
                     <input type="text" class="form-control" id="writer-input" placeholder="이름" name="writer"
-                        maxlength="20">
+                        maxlength="20" readonly value="${loginUser.name}">
+                        <!-- readonly 읽기 전용으로 들어감으로써   -->
+                        <!-- 작성자를 바꿀수 없게 만들었다 -->
+                        <!-- 로그인 유저가 글 쓰도록 처리 -->
                 </div>
                 <div class="mb-3">
                     <label for="title-input" class="form-label">글제목</label>
@@ -168,11 +171,12 @@
                 $img.classList.add('img-sizing');
                 // $img.setAttribute('src', fileName); 이렇게 하니까 보안상 이슈가 생김 그래서 
 
-                $img.setAttribute('src', 'loadFile?fileName=' + fileName);
+                $img.setAttribute('src', '/loadFile?fileName=' + fileName);
                 $img.setAttribute('alt', originFileName); // 시각 장애인에 대한 배려 
                 // 이미지가 안나올시 , 또는 이미지를 볼수없는 사람이 읽을수 있도록 사진에 코멘트를 달아준다 ! 
 
                 // <img src = "이미지 경로" alt="이미지에 대한 설명 (코멘트)">
+                console.log("이거 이미지 맞음")
 
                 $('.uploaded-list').append($img);
             }

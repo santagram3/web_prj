@@ -17,6 +17,8 @@ public class FileUtils {
 
     //MINE TYPE 설정을 위한 맵 만들기
     private static final Map<String, MediaType> mediaMap;
+    //맵 안에 키가 JPG 일때 반환을 어떤놈을할지
+    //key가 JPG 이면  , value 는 MediaType.IMAGE_JPEG
 
     static {
         mediaMap = new HashMap<>();
@@ -29,9 +31,13 @@ public class FileUtils {
     // 확장자를 알려주면 미디어 타입을 리턴하는 메서드
 
     public static MediaType getMediaType(String ext) {
+        // 지금 받은게 jpg  이다
         String upperExt = ext.toUpperCase();
+        //jpg 를 JPG 로 다 대문자로 바꾸고 !
         if (mediaMap.containsKey(ext.toUpperCase())) {
+//            mediaMap 안에 key JPG 를 넣어주면 값이 있으면 true , 아니면 false
             return mediaMap.get(upperExt);
+            // value 는 MediaType.IMAGE_JPEG  리턴
         }
         return null;
     }
@@ -57,9 +63,11 @@ public class FileUtils {
 
         // 파일 업로드 수행
         File f = new File(newUploadPath, newFileName);
+        // 새로운 파일 경로와 ,새로운 이름을 가진 파일로 재 탄생 !
 
         try {
             file.transferTo(f);
+            //  MultipartFile 형태를가진 , f 를 주어진 정보에 따라서 업로드 !
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -75,7 +83,9 @@ public class FileUtils {
         String fileFullPath = newUploadPath + File.separator + newFileName;
         String responseFilePath = fileFullPath.substring(uploadPath.length());
 
-        return responseFilePath.replace("\\", "/");
+
+        String replace = responseFilePath.replace("\\", "/");
+        return replace;
     }
 
     /**
@@ -121,6 +131,8 @@ public class FileUtils {
 
     // 파일명을 받아서 확장자를 추출하는 반환하는 함수
     public static String getFileExtension(String fileName) {
+       // C:/code/upload/2022/08/01/qfwqfj[oqwjf_상어.jpg 이걸 주면
+        // .두에 jpg 를주는 메서드
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
